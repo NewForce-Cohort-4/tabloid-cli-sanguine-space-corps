@@ -26,11 +26,8 @@ namespace TabloidCLI.UserInterfaceManagers
         public IUserInterfaceManager Execute()
         {
             JournalEntry journalEntry = _journalentryRepository.Get(_journalentryId);
-            Console.WriteLine("Details");
+            Console.WriteLine($"{journalEntry.Title}Details");
             Console.WriteLine(" 1) View");
-            Console.WriteLine(" 2) View Blog Posts");
-            Console.WriteLine(" 3) Add Tag");
-            Console.WriteLine(" 4) Remove Tag");
             Console.WriteLine(" 0) Go Back");
 
             Console.Write("> ");
@@ -38,16 +35,7 @@ namespace TabloidCLI.UserInterfaceManagers
             switch (choice)
             {
                 case "1":
-                   // View();
-                    return this;
-                case "2":
-                    //ViewBlogPosts();
-                    return this;
-                case "3":
-                    //AddTag();
-                    return this;
-                case "4":
-                   // RemoveTag();
+                    View();
                     return this;
                 case "0":
                     return _parentUI;
@@ -55,6 +43,19 @@ namespace TabloidCLI.UserInterfaceManagers
                     Console.WriteLine("Invalid Selection");
                     return this;
             }
+        }
+
+        private void View()
+        {
+            JournalEntry entry = _journalentryRepository.Get(_journalentryId);
+            Console.WriteLine($"Title: {entry.Title}");
+            Console.WriteLine($"Content: {entry.Content}");
+            Console.WriteLine("Tags:");
+            foreach (Tag tag in entry.Tags)
+            {
+                Console.WriteLine(" " + tag);
+            }
+            Console.WriteLine();
         }
     }
 }

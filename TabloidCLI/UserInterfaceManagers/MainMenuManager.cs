@@ -5,10 +5,11 @@ namespace TabloidCLI.UserInterfaceManagers
     public class MainMenuManager : IUserInterfaceManager
     {
         private const string CONNECTION_STRING = 
-            @"Data Source=localhost\SQLEXPRESS;Database=TabloidCLI;Integrated Security=True";
+            @"Data Source=localhost\SQLEXPRESS01;Database=TabloidCLI;Integrated Security=True";
 
         public IUserInterfaceManager Execute()
         {
+            Console.WriteLine("Hello! Welcome to the main menu. Please make a selection.");
             Console.WriteLine("Main Menu");
 
             Console.WriteLine(" 1) Journal Management");

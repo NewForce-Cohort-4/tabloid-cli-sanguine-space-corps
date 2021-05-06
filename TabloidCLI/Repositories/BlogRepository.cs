@@ -6,21 +6,21 @@ using TabloidCLI.Repositories;
 
 namespace TabloidCLI.Repositories
 {
-    class JournalEntryRepository : DatabaseConnector, IRepository<JournalEntry>
+    class BlogRepository : DatabaseConnector, IRepository<Blog>
     {
-        public JournalEntryRepository(string connectionString) : base(connectionString) { }
+        public BlogRepository(string connectionString) : base(connectionString) { }
 
         public void Delete(int id)
         {
             throw new NotImplementedException();
         }
 
-        public JournalEntry Get(int id)
+        public Blog Get(int id)
         {
             throw new NotImplementedException();
         }
 
-        public List<JournalEntry> GetAll()
+        public List<Blog> GetAll()
         {
             using (SqlConnection conn = Connection)
             {
@@ -29,38 +29,36 @@ namespace TabloidCLI.Repositories
                 {
                     cmd.CommandText = @"SELECT id,
                                                Title,
-                                               Content
-                                               CreateDateTime
-                                            From Journal";
+                                               URL
+                                            From Blog";
 
-                    List<JournalEntry> entries = new List<JournalEntry>();
+                    List<Blog> blogs = new List<Blog>();
 
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        JournalEntry entry = new JournalEntry()
+                        Blog blog = new Blog()
                         {
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
                             Title = reader.GetString(reader.GetOrdinal("Title")),
-                            Content = reader.GetString(reader.GetOrdinal("Content")),
-                            CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
+                            Url = reader.GetString(reader.GetOrdinal("URL")),
                         };
-                        entries.Add(entry);
+                        blogs.Add(blog);
                     }
 
                     reader.Close();
 
-                    return entries;
+                    return blogs;
                 }
             }
         }
 
-        public void Insert(JournalEntry entry)
+        public void Insert(Blog blog)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(JournalEntry entry)
+        public void Update(Blog blog)
         {
             throw new NotImplementedException();
         }

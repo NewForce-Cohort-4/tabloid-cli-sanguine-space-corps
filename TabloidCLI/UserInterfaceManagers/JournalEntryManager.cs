@@ -66,10 +66,12 @@ namespace TabloidCLI.UserInterfaceManagers
         private void List()
         {
             List<JournalEntry> entries = _journalentryRepository.GetAll();
-            foreach (JournalEntry entry in entries)
+            for (int i = 0; i < entries.Count; i++)
             {
-                Console.WriteLine(entry);
+                JournalEntry entry = entries[i];
+                Console.WriteLine($" {i + 1}) {entry.Title}");
             }
+            Console.Write("> ");
         }
 
         private JournalEntry Choose(string prompt = null)

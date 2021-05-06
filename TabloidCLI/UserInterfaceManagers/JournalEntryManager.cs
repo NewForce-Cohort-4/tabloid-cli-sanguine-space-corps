@@ -66,10 +66,12 @@ namespace TabloidCLI.UserInterfaceManagers
         private void List()
         {
             List<JournalEntry> entries = _journalentryRepository.GetAll();
-            foreach (JournalEntry entry in entries)
+            for (int i = 0; i < entries.Count; i++)
             {
-                Console.WriteLine(entry);
+                JournalEntry entry = entries[i];
+                Console.WriteLine($" {i + 1}) {entry.Title}");
             }
+            Console.Write("> ");
         }
 
         private JournalEntry Choose(string prompt = null)
@@ -123,7 +125,7 @@ namespace TabloidCLI.UserInterfaceManagers
 
         private void Edit()
         {
-            JournalEntry entryToEdit = Choose("Which author would you like to edit?");
+            JournalEntry entryToEdit = Choose("Which entry would you like to edit?");
             if (entryToEdit == null)
             {
                 return;
@@ -142,12 +144,11 @@ namespace TabloidCLI.UserInterfaceManagers
             {
                 entryToEdit.Content = entry;
             }
-            Console.Write("Date: (blank to leave unchanged: ");
+            Console.Write("New Date: (blank to leave unchanged: ");
             string UnparsedDate = Console.ReadLine();
-            DateTime date = Convert.ToDateTime(UnparsedDate);
             if (!string.IsNullOrWhiteSpace(UnparsedDate))
             {
-                entryToEdit.CreateDateTime = date;
+                entryToEdit.CreateDateTime = Convert.ToDateTime(UnparsedDate);
             }
 
             _journalentryRepository.Update(entryToEdit);

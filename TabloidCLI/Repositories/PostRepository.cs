@@ -79,7 +79,23 @@ namespace TabloidCLI.Repositories
 
         public void Insert(Post post)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"insert into Post 
+                                        (Title, URL, PublishDateTime, AuthorId, BlogId)
+                                        values(@Title, @URL, @PublishDateTime, @AuthorId, @BlogId)";
+                    cmd.Parameters.AddWithValue("@Title", post.Title);
+                    cmd.Parameters.AddWithValue("@Url", post.Url);
+                    cmd.Parameters.AddWithValue("@PublishDate", post.PublishDateTime);
+                    cmd.Parameters.AddWithValue("@AuthorId", post.Author.Id);
+                    cmd.Parameters.AddWithValue("@BlogId", post.Blog.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         public void Update(Post post)

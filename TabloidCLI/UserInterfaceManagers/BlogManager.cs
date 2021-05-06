@@ -63,29 +63,93 @@ namespace TabloidCLI.UserInterfaceManagers
             }
         }
 
-        private Blog Choose()
+        private void List()
         {
-            throw new NotImplementedException();
+            List<Blog> blogs = _blogRepository.GetAll();
+            foreach (Blog blog in blogs)
+            {
+                Console.WriteLine(blog);
+            }
         }
 
-        private void Remove()
+        private Blog Choose(string prompt = null)
         {
-            throw new NotImplementedException();
-        }
+            if (prompt == null)
+            {
+                prompt = "Please choose a blog:";
+            }
 
-        private void Edit()
-        {
-            throw new NotImplementedException();
+            Console.WriteLine(prompt);
+
+            List<Blog> blogs = _blogRepository.GetAll();
+
+            for (int i = 0; i < blogs.Count; i++)
+            {
+                Blog blog = blogs[i];
+                Console.WriteLine($" {i + 1}) {blog.Title}");
+            }
+            Console.Write("> ");
+
+            string input = Console.ReadLine();
+            try
+            {
+                int choice = int.Parse(input);
+                return blogs[choice - 1];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Invalid Selection");
+                return null;
+            }
         }
 
         private void Add()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("New Blog");
+            Blog blog = new Blog();
+
+            Console.Write("Title: ");
+            blog.Title = Console.ReadLine();
+
+            Console.Write("URL: ");
+            blog.Url = Console.ReadLine();
+
+
+            _blogRepository.Insert(blog);
         }
 
-        private void List()
+        private void Edit()
         {
-            throw new NotImplementedException();
+            Blog blogToEdit = Choose("Which blog would you like to edit?");
+            if (blogToEdit == null)
+            {
+                return;
+            }
+
+            Console.WriteLine();
+            Console.Write("New title (blank to leave unchanged: ");
+            string title = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(title))
+            {
+                blogToEdit.Title = title;
+            }
+            Console.Write("New URL (blank to leave unchanged: ");
+            string url = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(url))
+            {
+                blogToEdit.Url = url;
+            }
+
+            _blogRepository.Update(blogToEdit);
+        }
+
+        private void Remove()
+        {
+            Blog blogToDelete = Choose("Which blog would you like to remove?");
+            if (blogToDelete != null)
+            {
+                _blogRepository.Delete(blogToDelete.Id);
+            }
         }
     }
 }

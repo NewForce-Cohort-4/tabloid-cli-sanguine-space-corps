@@ -176,6 +176,41 @@ namespace TabloidCLI.UserInterfaceManagers
             }
         }
 
+        private Author ChooseAuthor(string prompt = null)
+        {
+            // prompt has a default value of null
+            // because it t
+            if (prompt == null)
+            {
+                prompt = "Please choose an Post:";
+            }
+
+            Console.WriteLine(prompt);
+
+            // A list of the all the posts are stored here
+            List<Author> authors = _authorRepository.GetAll();
+
+            // Looping through each post and adding one to the index
+            for (int i = 0; i < authors.Count; i++)
+            {
+                Author author = authors[i];
+                Console.WriteLine($" {i + 1}) {author.FullName}");
+            }
+            Console.Write("> ");
+
+            // Taking user input and converting into number that represents the authors' location in the list
+            string input = Console.ReadLine();
+            try
+            {
+                int choice = int.Parse(input);
+                return authors[choice - 1];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Invalid Selection");
+                return null;
+            }
+        }
 
 
         private void Edit()
@@ -206,8 +241,67 @@ namespace TabloidCLI.UserInterfaceManagers
                 postToEdit.PublishDateTime = Convert.ToDateTime(PublishingDateTime);
             }
 
+            Console.Write("New Author (blank to leave unchanged: ");
+
+            // When I call the choose method I cant pass a type of Author as parameter into Post
+            Author newAuthor = ChooseAuthor("Which author would you like to edit?");
+            if (newAuthor == null)
+            {
+                return;
+            }
+            postToEdit.Author = newAuthor;
+
+            Console.Write("New Blog (blank to leave unchanged: ");
+
+            // When I call the choose method I cant pass a type of Blog as parameter into Post
+            Blog newBlog = ChooseBlog("Which author would you like to edit?");
+            if (newBlog == null)
+            {
+                return;
+            }
+            postToEdit.Blog = newBlog;
+
             _postRepository.Update(postToEdit);
         }
+
+
+
+        private Blog ChooseBlog(string prompt = null)
+        {
+            // prompt has a default value of null
+            // because it t
+            if (prompt == null)
+            {
+                prompt = "Please choose an Blog:";
+            }
+
+            Console.WriteLine(prompt);
+
+            // A list of the all the posts are stored here
+            List<Blog> blogs = _blogRepository.GetAll();
+
+            // Looping through each post and adding one to the index
+            for (int i = 0; i < blogs.Count; i++)
+            {
+                Blog blog = blogs[i];
+                Console.WriteLine($" {i + 1}) {blog.Title}");
+            }
+            Console.Write("> ");
+
+            // Taking user input and converting into number that represents the blogs' location in the list
+            string input = Console.ReadLine();
+            try
+            {
+                int choice = int.Parse(input);
+                return blogs[choice - 1];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Invalid Selection");
+                return null;
+            }
+        }
+
 
         private void Remove()
         {

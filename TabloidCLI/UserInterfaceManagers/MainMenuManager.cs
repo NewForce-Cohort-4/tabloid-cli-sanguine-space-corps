@@ -4,7 +4,7 @@ namespace TabloidCLI.UserInterfaceManagers
 {
     public class MainMenuManager : IUserInterfaceManager
     {
-        private const string CONNECTION_STRING = 
+        private const string CONNECTION_STRING =
             @"Data Source=localhost\SQLEXPRESS01;Database=TabloidCLI;Integrated Security=True";
 
         public IUserInterfaceManager Execute()
@@ -18,6 +18,7 @@ namespace TabloidCLI.UserInterfaceManagers
             Console.WriteLine(" 4) Post Management");
             Console.WriteLine(" 5) Tag Management");
             Console.WriteLine(" 6) Search by Tag");
+            Console.WriteLine(" 7) Background Color Management");
             Console.WriteLine(" 0) Exit");
 
             Console.Write("> ");
@@ -30,6 +31,7 @@ namespace TabloidCLI.UserInterfaceManagers
                 case "4": throw new NotImplementedException();
                 case "5": return new TagManager(this, CONNECTION_STRING);
                 case "6": return new SearchManager(this, CONNECTION_STRING);
+                case "7": return new BackgroundManager(this);
                 case "0":
                     Console.WriteLine("Good bye");
                     return null;
@@ -37,6 +39,7 @@ namespace TabloidCLI.UserInterfaceManagers
                     Console.WriteLine("Invalid Selection");
                     return this;
             }
+
         }
     }
 }

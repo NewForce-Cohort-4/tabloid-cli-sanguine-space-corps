@@ -51,7 +51,7 @@ namespace TabloidCLI.UserInterfaceManagers
                     Add();
                     return this;
                 case "3":
-                    //Edit();
+                    Edit();
                     return this;
                 case "4":
                     Remove();
@@ -142,6 +142,8 @@ namespace TabloidCLI.UserInterfaceManagers
 
         private Post Choose(string prompt = null)
         {
+            // prompt has a default value of null
+            // because it t
             if (prompt == null)
             {
                 prompt = "Please choose an Post:";
@@ -149,8 +151,10 @@ namespace TabloidCLI.UserInterfaceManagers
 
             Console.WriteLine(prompt);
 
+            // A list of the all the posts are stored here
             List<Post> posts = _postRepository.GetAll();
 
+            // Looping through each post and adding one to the index
             for (int i = 0; i < posts.Count; i++)
             {
                 Post post = posts[i];
@@ -158,6 +162,7 @@ namespace TabloidCLI.UserInterfaceManagers
             }
             Console.Write("> ");
 
+            // Taking user input and converting into number that represents the posts' location in the list
             string input = Console.ReadLine();
             try
             {
@@ -173,42 +178,49 @@ namespace TabloidCLI.UserInterfaceManagers
 
 
 
-        //private void Edit()
-        //{
-        //    Author authorToEdit = Choose("Which author would you like to edit?");
-        //    if (authorToEdit == null)
-        //    {
-        //        return;
-        //    }
+        private void Edit()
+        {
+            Post postToEdit = Choose("Which post would you like to edit?");
+            if (postToEdit == null)
+            {
+                return;
+            }
 
-        //    Console.WriteLine();
-        //    Console.Write("New first name (blank to leave unchanged: ");
-        //    string firstName = Console.ReadLine();
-        //    if (!string.IsNullOrWhiteSpace(firstName))
-        //    {
-        //        authorToEdit.FirstName = firstName;
-        //    }
-        //    Console.Write("New last name (blank to leave unchanged: ");
-        //    string lastName = Console.ReadLine();
-        //    if (!string.IsNullOrWhiteSpace(lastName))
-        //    {
-        //        authorToEdit.LastName = lastName;
-        //    }
-        //    Console.Write("New bio (blank to leave unchanged: ");
-        //    string bio = Console.ReadLine();
-        //    if (!string.IsNullOrWhiteSpace(bio))
-        //    {
-        //        authorToEdit.Bio = bio;
-        //    }
+            Console.WriteLine();
+            Console.Write("New title (blank to leave unchanged: ");
+            string title = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(title))
+            {
+                postToEdit.Title = title;
+            }
+            Console.Write("New URL (blank to leave unchanged: ");
+            string URL = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(URL))
+            {
+                postToEdit.Url = URL;
+            }
+            Console.Write("New publishing date (blank to leave unchanged: ");
+            string PublishingDateTime = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(PublishingDateTime))
+            {
+                postToEdit.PublishDateTime = Convert.ToDateTime(PublishingDateTime);
+            }
 
-        //    _authorRepository.Update(authorToEdit);
-        //}
+            _postRepository.Update(postToEdit);
+        }
 
         private void Remove()
         {
+            // User selects the switch case where the Remove method is invoked
+            // We create a new instace of post (a lot of what you do in C#)
+            // Assigning it a value and then invoking the Choose method
             Post postToDelete = Choose("Which post would you like to remove?");
             if (postToDelete != null)
             {
+                // Bringing that number back and storing above
+                // and then we use that and match it up with the post to be deleted
+
+                // Delete method is invoked and we pass the parameter in to it
                 _postRepository.Delete(postToDelete.Id);
                 Console.WriteLine();
             }

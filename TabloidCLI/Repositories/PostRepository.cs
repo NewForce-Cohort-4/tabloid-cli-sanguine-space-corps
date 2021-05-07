@@ -129,16 +129,36 @@ namespace TabloidCLI.Repositories
 
         public void Update(Post post)
         {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(int id)
-        {
             using (SqlConnection conn = Connection)
             {
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
+                    cmd.CommandText = @"UPDATE Post 
+                                           SET Title = @Title,
+                                               Url = @Url,
+                                               PublishDateTime = @PublishDateTime
+                                         WHERE id = @id";
+
+                    cmd.Parameters.AddWithValue("@Title", post.Title);
+                    cmd.Parameters.AddWithValue("@Url", post.Url);
+                    cmd.Parameters.AddWithValue("@PublishDateTime", post.PublishDateTime);
+                    cmd.Parameters.AddWithValue("@id", post.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void Delete(int id)
+        {
+            // the integer passed is the id passed into Delete
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    // We give the SQL Server a command to delete 
                     cmd.CommandText = @"DELETE FROM Post WHERE id = @id";
                     cmd.Parameters.AddWithValue("@id", id);
 

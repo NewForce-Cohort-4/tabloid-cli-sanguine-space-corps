@@ -89,11 +89,12 @@ namespace TabloidCLI.UserInterfaceManagers
             foreach (Author author in authors)
 
             {
-                Console.WriteLine($"{i}) {author}");
+                Console.WriteLine($"{i} {author}");
                 i++;
             }
             Console.Write("> ");
             post.Author = authors[Convert.ToInt32(Console.ReadLine())-1];
+            
 
 
             // Remember that I still need to update the insert method inside PostRepository
@@ -114,9 +115,9 @@ namespace TabloidCLI.UserInterfaceManagers
                 Console.WriteLine($"{j}) {blog}");
                 j++;
             }
-            Console.Write("> ");
+            
             post.Blog = blogs[Convert.ToInt32(Console.ReadLine()) - 1];
-
+            Console.Write("> ");
 
 
 

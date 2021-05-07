@@ -4,6 +4,7 @@ namespace TabloidCLI.UserInterfaceManagers
 {
     public class MainMenuManager : IUserInterfaceManager
     {
+        // That portal is defined here
         private const string CONNECTION_STRING = 
             @"Data Source=localhost\SQLEXPRESS;Database=TabloidCLI;Integrated Security=True";
 
@@ -24,6 +25,7 @@ namespace TabloidCLI.UserInterfaceManagers
             string choice = Console.ReadLine();
             switch (choice)
             {
+                // When a user selects an option the portal to the database is passed in as a parameter
                 case "1": return new JournalEntryManager(this, CONNECTION_STRING);
                 case "2": return new BlogManager(this, CONNECTION_STRING);
                 case "3": return new AuthorManager(this, CONNECTION_STRING);

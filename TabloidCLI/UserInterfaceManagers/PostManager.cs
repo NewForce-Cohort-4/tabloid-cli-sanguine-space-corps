@@ -5,8 +5,11 @@ using TabloidCLI.Repositories;
 
 namespace TabloidCLI.UserInterfaceManagers
 {
+    // That portal is passed to the PostManager here 
+    // The PostManager inherets the interface which is just a method Execute()
     public class PostManager : IUserInterfaceManager
     {
+        // These are the private variables noted with the underscore
         private readonly IUserInterfaceManager _parentUI;
         private PostRepository _postRepository;
         private AuthorRepository _authorRepository;
@@ -16,6 +19,9 @@ namespace TabloidCLI.UserInterfaceManagers
 
         public PostManager(IUserInterfaceManager parentUI, string connectionString)
         {
+            // The private variables are now declared here and assigned a new value
+            // Creating an instance of each here tying back to the parent file
+            // Passing in again the portal to the Repositories
             _parentUI = parentUI;
             _postRepository = new PostRepository(connectionString);
             _authorRepository = new AuthorRepository(connectionString);
@@ -25,6 +31,7 @@ namespace TabloidCLI.UserInterfaceManagers
 
         public IUserInterfaceManager Execute()
         {
+            // That Interface Execute is defined here 
             Console.WriteLine("Post Menu");
             Console.WriteLine(" 1) List Posts");
             Console.WriteLine(" 2) Add Post");
@@ -38,7 +45,7 @@ namespace TabloidCLI.UserInterfaceManagers
             switch (choice)
             {
                 case "1":
-                    //List();
+                    List();
                     return this;       
                 case "2":
                     Add();
@@ -47,7 +54,7 @@ namespace TabloidCLI.UserInterfaceManagers
                     //Edit();
                     return this;
                 case "4":
-                    //Remove();
+                    Remove();
                     return this;
                 case "0":
                     return _parentUI;
@@ -57,33 +64,43 @@ namespace TabloidCLI.UserInterfaceManagers
             }
         }
 
-        //private void List()
-        //{
-        //    List<Post> posts = _postRepository.GetAll();
-        //    foreach (Post post in posts)
-        //    {
-        //        Console.WriteLine(post);
-        //    }
-        //}
+        private void List()
+        {
+            // Here we create a new list instance of the class Post
+            // Which is a container for the 
+            List<Post> posts = _postRepository.GetAll();
+            foreach (Post post in posts)
+            {
+                Console.WriteLine($"Title: {post.Title}");
+                Console.WriteLine($"Link : {post.Url}");
+                Console.WriteLine($"Pushlished: {post.PublishDateTime}");
+            }
+        }
 
 
         private void Add()
         {
-            Console.WriteLine("New Author");
+            // Creating a new object of post and storing items from its class
+            Console.WriteLine("New Post");
             Post post = new Post();
 
+            // A title
             Console.Write("Title: ");
             post.Title = Console.ReadLine();
 
+            // A URL
             Console.Write("URL: ");
             post.Url = Console.ReadLine();
 
+            // A publishing date
             Console.Write("Published: ");
             post.PublishDateTime = Convert.ToDateTime(Console.ReadLine());
 
-            // Need to implement a selection list for authors
+            // Need to implement a selection list for authors to store it as part of the object
             // What example code do I have?
-            Console.Write("Please select an Author: ");
+            // The for loop from the Choose method in AuthorRepository
+            // But me and Tommy made a new one
+            Console.Write($"Please select an Author: \n");
             List<Author> authors = _authorRepository.GetAll();
             int i = 1;
             foreach (Author author in authors)
@@ -93,20 +110,14 @@ namespace TabloidCLI.UserInterfaceManagers
                 i++;
             }
             Console.Write("> ");
+            // Putting the user selection into object 'post'
+            // But because the ReadLine reads input as a string, we convert it to number
+            // Which corelates with a index inside the authors list
             post.Author = authors[Convert.ToInt32(Console.ReadLine())-1];
             
 
-
-            // Remember that I still need to update the insert method inside PostRepository
-            //Console.Write("Blog: ");
-            //List<Blog> blogs = _blogRepository.GetAll();
-            //for (int j = 0; j < blogs.Count; j++)
-            //{
-            //    Blog blog = blogs[j];
-            //    Console.WriteLine($" {j + 1}) {blog}");
-            //}
-            //Console.Write("> ");
-
+            // Same thing happens here in blog
+            Console.Write($"Please select a Blog: \n");
             List<Blog> blogs = _blogRepository.GetAll();
             int j = 1;
             foreach (Blog blog in blogs)
@@ -115,77 +126,52 @@ namespace TabloidCLI.UserInterfaceManagers
                 Console.WriteLine($"{j}) {blog}");
                 j++;
             }
-            
-            post.Blog = blogs[Convert.ToInt32(Console.ReadLine()) - 1];
             Console.Write("> ");
+            post.Blog = blogs[Convert.ToInt32(Console.ReadLine()) - 1];
+            
 
 
+            // Using the dot operator we add all the properties of the object in 'post'
+            // Then invoke the insert method on the post repository
+            // Which is really just a class that communicates with a database
 
+            // This all gets packaged up as 'post' and passed into the paramater for the Insert method
             _postRepository.Insert(post);
         }
 
 
-        //private Author ChooseAuthor(string prompt = null)
-        //{
-        //    if (prompt == null)
-        //    {
-        //        prompt = "Please choose an Author:";
-        //    }
+        private Post Choose(string prompt = null)
+        {
+            if (prompt == null)
+            {
+                prompt = "Please choose an Post:";
+            }
 
-        //    Console.WriteLine(prompt);
+            Console.WriteLine(prompt);
 
-        //    List<Author> authors = _authorRepository.GetAll();
+            List<Post> posts = _postRepository.GetAll();
 
-        //    for (int i = 0; i < authors.Count; i++)
-        //    {
-        //        Author author = authors[i];
-        //        Console.WriteLine($" {i + 1}) {author.FullName}");
-        //    }
-        //    Console.Write("> ");
+            for (int i = 0; i < posts.Count; i++)
+            {
+                Post post = posts[i];
+                Console.WriteLine($" {i + 1}) {post.Title}");
+            }
+            Console.Write("> ");
 
-        //    string input = Console.ReadLine();
-        //    try
-        //    {
-        //        int choice = int.Parse(input);
-        //        return authors[choice - 1];
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine("Invalid Selection");
-        //        return null;
-        //    }
-        //}
+            string input = Console.ReadLine();
+            try
+            {
+                int choice = int.Parse(input);
+                return posts[choice - 1];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Invalid Selection");
+                return null;
+            }
+        }
 
-        //private Blog ChooseBlog(string prompt = null)
-        //{
-        //    if (prompt == null)
-        //    {
-        //        prompt = "Please choose a Blog:";
-        //    }
 
-        //    Console.WriteLine(prompt);
-
-        //    List<Blog> blogs = _blogRepository.GetAll();
-
-        //    for (int i = 0; i < blogs.Count; i++)
-        //    {
-        //        Blog blog = blogs[i];
-        //        Console.WriteLine($" {i + 1}) {blog.Title}");
-        //    }
-        //    Console.Write("> ");
-
-        //    string input = Console.ReadLine();
-        //    try
-        //    {
-        //        int choice = int.Parse(input);
-        //        return blogs[choice - 1];
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine("Invalid Selection");
-        //        return null;
-        //    }
-        //}
 
         //private void Edit()
         //{
@@ -218,13 +204,14 @@ namespace TabloidCLI.UserInterfaceManagers
         //    _authorRepository.Update(authorToEdit);
         //}
 
-        //private void Remove()
-        //{
-        //    Author authorToDelete = Choose("Which author would you like to remove?");
-        //    if (authorToDelete != null)
-        //    {
-        //        _authorRepository.Delete(authorToDelete.Id);
-        //    }
-        //}
+        private void Remove()
+        {
+            Post postToDelete = Choose("Which post would you like to remove?");
+            if (postToDelete != null)
+            {
+                _postRepository.Delete(postToDelete.Id);
+                Console.WriteLine();
+            }
+        }
     }
 }

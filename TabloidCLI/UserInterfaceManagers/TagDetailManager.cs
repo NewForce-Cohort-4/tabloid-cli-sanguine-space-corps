@@ -45,11 +45,7 @@ namespace TabloidCLI.UserInterfaceManagers
         {
             Tag tag = _tagRepository.Get(_tagId);
             Console.WriteLine($"Name: {tag.Name}");
-            //foreach (Tag tags in tag.Name)
-            //{
-            //    Console.WriteLine(tags);
-            //}
-            //Console.WriteLine();
+
         }
     }
 }
